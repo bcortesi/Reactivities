@@ -1,0 +1,100 @@
+﻿@model Editorial.MVC.Models.Content.ListViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <section id="tabs" class="project-tab">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group" id="adv-search">
+                        <input type="text" class="form-control" placeholder="Search" />
+                        <div class="input-group-btn">
+                            <div class="btn-group" role="group">
+                                <div class="dropdown dropdown-lg">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <form class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                                <label for="filter">Filter by</label>
+                                                <select class="form-control">
+                                                    <option value="0" selected>All Content Types</option>
+                                                    <option value="1">Comment/Analysis</option>
+                                                    <option value="2">Insight</option>
+                                                    <option value="3">Official Statement</option>
+                                                    <option value="4">Press Round-Up</option>
+                                                    <option value="5">Case File</option>
+                                                    <option value="5">Press Summary</option>
+                                                    <option value="5">Conference</option>
+                                                    <option value="5">Event</option>
+                                                    <option value="5">Live Report</option>
+                                                    <option value="5">Ab Extra</option>
+                                                    <option value="5">Profile</option>
+                                                    <option value="5">Company</option>
+                                                    <option value="5">Law Firm</option>
+                                                    <option value="5">Regulator</option>
+                                                    <option value="5">Court</option>
+                                                    <option value="5">Entity (Other)</option>
+                                                    <option value="5">Press Source</option>
+                                                    <option value="5">Person</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contain">Author</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default" type="button">Me</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contain">Creation date (between)</label>
+                                                <div>
+                                                    @(Html.Kendo().DatePicker()
+                                                   .Name("CreationDateFrom")
+                                                   .HtmlAttributes(new { title = "CreationDate" })
+                                                   .DateInput()
+                                                   .Value("")
+                                                    )&nbsp;&nbsp;-&nbsp;
+                                                    @(Html.Kendo().DatePicker()
+                                                 .Name("CreationDateTo")
+                                                 .HtmlAttributes(new { title = "CreationDate" })
+                                                 .DateInput()
+                                                 .Value("")
+                                                    )
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="draftOnly">
+                                                    <label class="custom-control-label" for="draftOnly">Show Draft Only</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="button" class="btn btn-primary" value="Clear" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary"><span class="fa fa-search" aria-hidden="true"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-2">
+                @foreach (var item in Model.Contents)
+                {
+
+                    <div class="card my-1 p-2 cardLst" onclick="location.href='/Content/Edit/@item.Id';">
+
+                        <div><b>@item.Title</b>&nbsp;@item.PublicationDateTime</div>
+                        @Html.Raw(item.InBrief)
+
+                    </div>
+                }
+            </div>
+            
+        </div>        
+    </section>

@@ -1,0 +1,225 @@
+﻿@model Editorial.MVC.Models.Content.ContentViewModel
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<script type="text/javascript">
+    function submitDraft() {
+        $('#Status').val('2');
+        return true;
+    }
+    kendo.culture("en-GB");
+</script>
+<h1>Create/Edit Content</h1>
+
+<form id="form-content" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+
+    <ul class="nav nav-tabs" id="contentTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="content-tab" href="#content" data-toggle="tab" role="tab" aria-controls="content" aria-selected="true">Content</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="related-tab" href="#related" data-toggle="tab" role="tab" aria-controls="related" aria-selected="false">Related</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="topics-tab" href="#topics" data-toggle="tab" role="tab" aria-controls="topics" aria-selected="false">Topics</a>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content pt-3" >
+        <div id="content" class="tab-pane fade show active" aria-labelledby="content-tab" role="tabpanel">
+
+            @Html.Hidden("Id")
+            <div class="form-group">
+                <div>Author(s)</div>
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                <div>Title</div>
+                <input asp-for="Title" class="form-control" />
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger  " })
+            </div>
+
+            <div class="form-group">
+                <div>In Brief</div>
+
+                @Html.ValidationMessageFor(m => m.InBrief, "", new { @class = "text-danger  " })
+                @(Html.Kendo().Editor()
+      .Name("InBrief")
+      .HtmlAttributes(new { style = "height:30px", aria_label = "editor" })
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+      .ImageBrowser(imageBrowser => imageBrowser
+          .Image("~/Content/UserFiles/Images/{0}")
+          .Read("Read", "ImageBrowser")
+          .Create("Create", "ImageBrowser")
+          .Destroy("Destroy", "ImageBrowser")
+          .Upload("Upload", "ImageBrowser")
+          .Thumbnail("Thumbnail", "ImageBrowser")
+      )
+      .Value(Model.InBrief)
+                )
+            </div>
+
+
+            <!--
+    <div class="form-group">
+        <div>Status</div>
+        <input asp-for="Status" class="form-control" id="Status"/>
+    </div>
+        -->
+
+            <div class="form-group">
+                <div>Full Text</div>
+                @(Html.Kendo().Editor()
+              .Name("FullText")
+              .HtmlAttributes(new { style = "height:640px", aria_label = "editor" })
+              .Resizable(resizable => resizable.Content(true).Toolbar(true))
+              .ImageBrowser(imageBrowser => imageBrowser
+                  .Image("~/Content/UserFiles/Images/{0}")
+                  .Read("Read", "ImageBrowser")
+                  .Create("Create", "ImageBrowser")
+                  .Destroy("Destroy", "ImageBrowser")
+                  .Upload("Upload", "ImageBrowser")
+                  .Thumbnail("Thumbnail", "ImageBrowser")
+              )
+              .Value(Model.FullText)
+                )
+            </div>
+            <div class="form-group">
+                <div>Publish Date</div>
+                @(Html.Kendo().DateTimePicker()
+                    .Name("PublicationDateTime")
+                    .HtmlAttributes(new { style = "width: 300px", title = "PublicationDateTime" })
+                    .DateInput()
+                    .Value(Model.PublicationDateTime)
+                )
+            </div>
+
+        </div>
+        <!-- -->
+        <div id="related" class="tab-pane fade" aria-labelledby="related-tab" role="tabpanel">
+            <div>
+                Related MLex Content<br />
+                <input type="button" class="btn btn-primary" value="Add" onclick="" />
+            </div>
+            <div class="pt-3 pb-5">
+                File Attachments<br />
+                <input type="button" class="btn btn-primary" value="Add" onclick="" />
+            </div>
+
+        </div>
+        <!-- -->
+        <div id="topics" class="tab-pane fade" aria-labelledby="topics-tab" role="tabpanel">
+            Topics
+            <div>
+            @(Html.Kendo().TreeView()
+                .Name("treeview")
+                .Checkboxes(checkboxes => checkboxes
+                    .Name("checkedFiles")
+                    .CheckChildren(true)
+                )
+                .Events(events => events
+                    .Check("onCheck")
+                )
+                .Items(root =>
+                {
+
+                    root.Add().Text("Categories").Id("2")
+                        .Expanded(false)
+                        .Items(project =>
+                        {
+                            project.Add().Text("Activist").Id("3");
+                            project.Add().Text("Antitrust").Id("4");
+                            project.Add().Text("Brexit").Id("5");
+                        });
+
+                    root.Add().Text("Industries").Id("6")
+                        .Expanded(false)
+                        .Items(item =>
+                        {
+                            item.Add().Text("Consumer Industries").Id("7").Items(c7 =>
+                            { 
+                                c7.Add().Text("Consumer Goods").Id("8");
+                                c7.Add().Text("Food").Id("8");
+                                c7.Add().Text("Retail").Id("8");
+                            });
+                            item.Add().Text("Digital Industries").Id("8");
+                            item.Add().Text("Emmissions").Id("8");
+                        });
+
+                    root.Add().Text("Courts & Autorities").Id("9")
+                        .Expanded(false)
+                        .Items(reports =>
+                        {
+                            reports.Add().Text("Brazil Courts").Id("10");
+                            reports.Add().Text("China Courts").Id("11");
+                            reports.Add().Text("EFTA Courts").Id("12");
+                        });
+
+                    root.Add().Text("Geographies").Id("9")
+                      .Expanded(false)
+                      .Items(reports =>
+                      {
+                          reports.Add().Text("Africa").Id("10");
+                          reports.Add().Text("Asia").Id("11");
+                          reports.Add().Text("Europe").Id("12");
+                      });
+
+                })
+            )
+                <script>
+
+                    // function that gathers IDs of checked nodes
+                    function checkedNodeIds(nodes, checkedNodes) {
+                        for (var i = 0; i < nodes.length; i++) {
+                            if (nodes[i].checked) {
+                                checkedNodes.push(nodes[i].id);
+                            }
+
+                            if (nodes[i].hasChildren) {
+                                checkedNodeIds(nodes[i].children.view(), checkedNodes);
+                            }
+                        }
+                    }
+
+                    // show checked node IDs on datasource change
+                    function onCheck() {
+                        var checkedNodes = [],
+                            treeView = $("#treeview").data("kendoTreeView"),
+                            message;
+
+                        checkedNodeIds(treeView.dataSource.view(), checkedNodes);
+
+                        if (checkedNodes.length > 0) {
+                            message = "IDs of checked nodes: " + checkedNodes.join(",");
+                        } else {
+                            message = "No nodes checked.";
+                        }
+
+                        $("#result").html(message);
+                    }
+                </script>
+            </div>
+        </div>
+    </div> 
+    <div class="form-group pt-3">
+        <div class="row">
+            <div class="col-2">
+                <input type="submit" class="btn btn-success btn-block" value="Save as Draft" formaction="@(Url.Action("SaveAsDraft"))" onclick="return submitDraft();" />
+            </div>
+            <div class="col-2">
+                <input type="submit" class="btn btn-danger btn-block" value="Save and Publish" formaction="@(Url.Action("SaveAndPublish"))" />
+            </div>
+            <div class="col-2">
+                <input type="button" class="btn btn-secondary btn-block" value="Cancel" onclick="window.location='/'" />
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
